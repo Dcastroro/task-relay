@@ -42,6 +42,15 @@ local to your chosen process. Task Relay's default/JSON reports omit child
 output; `--verbose` forwards it. Both commands can still read local files and
 inherit environment variables, so use your existing credential handling.
 
+## Check API contract changes before a build
+
+[API Drift Guard](https://github.com/Dcastroro/api-drift-guard) compares two local
+OpenAPI JSON contracts and blocks breaking/review findings by default. Add it
+as a prerequisite to skip a build when the contract gate fails. The comparator
+requires no credentials and emits line-based reports without input names or
+values. See its [Task Relay example](https://github.com/Dcastroro/api-drift-guard/blob/main/docs/automation.md)
+for a complete configuration and supported-input limits.
+
 ## Other languages
 
 Task Relay is not limited to Node commands. An argument array such as
