@@ -26,7 +26,9 @@ milliseconds are rounded, so very short operations can report zero.
 
 `exitCode` is null when no normal exit code is available or a task never
 started. Optional reasons include `spawn-error`, `signal`, `dependency`,
-`interrupted`, and `executor-error`. A timeout/cancelled running task is
+`interrupted`, `executor-error`, and `executor-invalid-result`. The last reason
+means a custom executor returned a malformed or nonterminal result; the task
+fails and its descendants are skipped. A timeout/cancelled running task is
 identified by its status; its exit code can vary by platform.
 
 Plan reports have `version: 1`, `action: "plan"`, effective `concurrency` and
