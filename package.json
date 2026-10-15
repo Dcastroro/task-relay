@@ -1,6 +1,6 @@
 {
   "name": "task-relay",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Run development tasks as a dependency graph with bounded parallelism, timeouts and clean JSON reports.",
   "private": true,
   "type": "module",
