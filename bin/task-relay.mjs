@@ -1,10 +1,12 @@
 #!/usr/bin/env node
+import { readFileSync } from 'node:fs';
 import { open } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { TextDecoder } from 'node:util';
 import { createPlan, runTasks, ConfigError } from '../src/index.mjs';
 
-const HELP = `Task Relay 0.1.0
+const VERSION = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version;
+const HELP = `Task Relay ${VERSION}
 
 Usage: node bin/task-relay.mjs <plan|run> [targets...] [options]
 
@@ -71,7 +73,7 @@ async function main() {
   try {
     options = parseArgs(args);
     if (options.help) { console.log(HELP); return; }
-    if (options.version) { console.log('0.1.0'); return; }
+    if (options.version) { console.log(VERSION); return; }
     const configPath = resolve(options.config);
     const config = await readConfig(configPath);
     const plan = createPlan(config, options.targets);

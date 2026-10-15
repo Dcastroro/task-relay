@@ -222,3 +222,9 @@ retries and matrix expansion are outside its scope.
 
 See [the roadmap](ROADMAP.md), [contribution guide](CONTRIBUTING.md) and
 [security notes](SECURITY.md). MIT license. Created by David Castro.
+
+## Repository and release checks
+
+Run `npm run repo:check` before committing. Source releases are built from a
+clean, tested tag and include a checksum and commit manifest. See
+[RELEASING.md](RELEASING.md) for validation, publication and maintenance.

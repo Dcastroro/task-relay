@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, rmSync, writeFileSync, existsSync } from 'node:fs';
@@ -84,7 +85,7 @@ test('help and version need no configuration', t => {
   const root = fixture(t);
   rmSync(join(root, 'task-relay.json'));
   assert.match(exec(root, ['--help']).stdout, /Usage:/);
-  assert.equal(exec(root, ['--version']).stdout.trim(), '0.1.0');
+  assert.equal(exec(root, ['--version']).stdout.trim(), JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version);
 });
 
 test('SIGINT produces a final JSON report and exit 130 on POSIX', { skip: process.platform === 'win32', timeout: 10000 }, async t => {

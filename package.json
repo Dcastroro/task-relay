@@ -1,23 +1,41 @@
 {
   "name": "task-relay",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Run development tasks as a dependency graph with bounded parallelism, timeouts and clean JSON reports.",
   "private": true,
   "type": "module",
   "license": "MIT",
   "author": "David Castro",
-  "engines": { "node": ">=22" },
-  "bin": { "task-relay": "bin/task-relay.mjs" },
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "task-relay": "bin/task-relay.mjs"
+  },
   "exports": "./src/index.mjs",
-  "repository": { "type": "git", "url": "git+https://github.com/Dcastroro/task-relay.git" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dcastroro/task-relay.git"
+  },
   "homepage": "https://github.com/Dcastroro/task-relay#readme",
-  "bugs": { "url": "https://github.com/Dcastroro/task-relay/issues" },
+  "bugs": {
+    "url": "https://github.com/Dcastroro/task-relay/issues"
+  },
   "scripts": {
     "test": "node --test",
     "check": "node scripts/check.mjs",
     "pipeline": "node bin/task-relay.mjs run",
     "plan": "node bin/task-relay.mjs plan --config examples/pipeline.json",
-    "demo": "node bin/task-relay.mjs run --config examples/pipeline.json"
+    "demo": "node bin/task-relay.mjs run --config examples/pipeline.json",
+    "repo:check": "node scripts/repository-check.mjs",
+    "release:build": "node scripts/build-release.mjs"
   },
-  "keywords": ["task-runner", "automation", "cli", "dag", "developer-tools", "ci"]
+  "keywords": [
+    "task-runner",
+    "automation",
+    "cli",
+    "dag",
+    "developer-tools",
+    "ci"
+  ]
 }
