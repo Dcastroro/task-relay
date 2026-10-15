@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createPlan } from '../src/index.mjs';
 import { schedule } from '../src/schedule.mjs';
+import { spawnSync } from 'node:child_process';
 
 const task = (needs = []) => ({ command: ['$node', '--version'], needs });
 const plan = tasks => createPlan({ version: 1, tasks });
@@ -80,6 +81,44 @@ test('captures executor failure without exposing the thrown error text', async (
   });
   assert.equal(report.tasks[0].reason, 'executor-error');
   assert.equal(JSON.stringify(report).includes('PRIVATE_SENTINEL'), false);
+});
+
+test('malformed executor results fail the task and skip descendants without hanging', () => {
+  // Isolate the regression: an invalid status used to spin synchronously forever,
+  // preventing an in-process timeout or AbortSignal from firing.
+  const source = `
+    import assert from 'node:assert/strict';
+    import { createPlan } from './src/index.mjs';
+    import { schedule } from './src/schedule.mjs';
+    const invalid = [undefined, null, [], 'PRIVATE_RESULT', {},
+      {status:'running',exitCode:0,durationMs:1},
+      {status:'PRIVATE_STATUS',exitCode:0,durationMs:1},
+      {status:'passed',exitCode:'PRIVATE_EXIT',durationMs:1},
+      {status:'passed',exitCode:0,durationMs:Infinity},
+      {status:'passed',exitCode:7,durationMs:1}];
+    for (const value of invalid) {
+      const plan = createPlan({version:1,tasks:{
+        source:{command:['$node','--version']},
+        dependent:{command:['$node','--version'],needs:['source']},
+        independent:{command:['$node','--version']}
+      }});
+      const started = [];
+      const report = await schedule(plan,{baseDir:'.',executor:async task => {
+        started.push(task.name);
+        return task.name === 'source' ? value : {status:'passed',exitCode:0,durationMs:1};
+      }});
+      assert.equal(report.ok,false);
+      assert.deepEqual(started,['source','independent']);
+      assert.deepEqual(report.tasks.map(task=>task.status),['failed','skipped','passed']);
+      assert.equal(report.tasks[0].reason,'executor-invalid-result');
+      assert.equal(JSON.stringify(report).includes('PRIVATE_'),false);
+    }
+    console.log('executor-results-checked');
+  `;
+  const result = spawnSync(process.execPath,['--input-type=module','-e',source],{encoding:'utf8',timeout:5000,maxBuffer:4096,windowsHide:true});
+  assert.equal(result.error,undefined,'executor validation must not hang');
+  assert.equal(result.status,0,result.stderr);
+  assert.equal(result.stdout.trim(),'executor-results-checked');
 });
 
 test('report order is stable even when tasks finish out of order', async () => {

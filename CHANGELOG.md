@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2 — 2026-10-15
+
+- Validate custom executor terminal results before releasing dependent tasks.
+- Convert malformed results into fixed-code failures instead of an infinite scheduler loop.
+- Add an isolated regression covering invalid states, exit codes and durations.
+
 ## 0.1.1 — 2026-10-15
 
 - Add a bounded repository policy check with value-free diagnostics.

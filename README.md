@@ -200,6 +200,13 @@ console.log(report.ok);
 for bounded output forwarding. Callbacks should not throw. Configuration
 errors throw `ConfigError`; command failures are returned in the report.
 
+Custom integrations can inject `executor(task, options)`. It must resolve to a
+terminal `status` (`passed`, `failed`, `timed-out`, `skipped` or `cancelled`), an
+integer/null `exitCode` and a finite nonnegative `durationMs`. A passed result
+requires exit code 0. Malformed results become a failed task with fixed reason
+`executor-invalid-result`; descendants are skipped while independent tasks finish.
+Rejected executors use `executor-error` without copying exception details.
+
 ## Development and scope
 
 ```sh
