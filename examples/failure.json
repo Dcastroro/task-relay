@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "tasks": {
+    "test": { "command": ["$node", "step.mjs", "test", "20", "1"] },
+    "build": { "command": ["$node", "step.mjs", "build"], "needs": ["test"] },
+    "docs": { "command": ["$node", "step.mjs", "docs"] }
+  }
+}

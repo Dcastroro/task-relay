@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "concurrency": 2,
+  "tasks": {
+    "syntax": { "command": ["$node", "scripts/check.mjs", "--syntax-only"] },
+    "test": { "command": ["$node", "--test"], "timeoutMs": 60000 },
+    "plan-demo": { "command": ["$node", "bin/task-relay.mjs", "plan", "--config", "examples/pipeline.json"], "needs": ["syntax", "test"] },
+    "run-demo": { "command": ["$node", "bin/task-relay.mjs", "run", "--config", "examples/pipeline.json"], "needs": ["syntax", "test"] }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "concurrency": 2,
+  "tasks": {
+    "lint": { "command": ["$node", "step.mjs", "lint", "120"] },
+    "unit": { "command": ["$node", "step.mjs", "unit", "180"] },
+    "build": { "command": ["$node", "step.mjs", "build", "100"], "needs": ["lint", "unit"] },
+    "smoke": { "command": ["$node", "step.mjs", "smoke", "80"], "needs": ["build"] },
+    "package": { "command": ["$node", "step.mjs", "package", "80"], "needs": ["build"] }
+  }
+}
